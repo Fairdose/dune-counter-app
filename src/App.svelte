@@ -1,5 +1,5 @@
 <script>
-  const ws = new WebSocket("wss://dune-counter-api.fairdose.net");
+  let ws = new WebSocket(import.meta.env.VITE_SOCKET_URL)
 
   let points = {
     momentum: 0,
@@ -7,21 +7,33 @@
     extendedTask: 0
   }
 
-  let store = null
+  let windowClose = false
+
+  ws.onmessage = (event) => {
+    console.log(event)
+    points = JSON.parse(event.data)
+  }
+
+  ws.onerror = (event) => {
+    console.log(event)
+  }
+
+  ws.onclose = () => {
+    if (!windowClose) {
+      setTimeout(() => {
+        ws = new WebSocket(import.meta.env.VITE_SOCKET_URL)
+      }, 500)
+    }
+  }
+
+  window.addEventListener('beforeunload', () => {
+    windowClose = true
+    ws.close()
+  })
 
   const sendPoints = async () => {
     await ws.send(JSON.stringify(points))
   }
-
-  ws.onmessage = async (event) => {
-    points = JSON.parse(event.data)
-  }
-
-  document.addEventListener("wheel", function(event){
-    if(document.activeElement.type === "number") {
-      document.activeElement.blur();
-    }
-  });
 
 </script>
 
