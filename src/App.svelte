@@ -10,7 +10,6 @@
   let windowClose = false
 
   ws.onmessage = (event) => {
-    console.log(event)
     points = JSON.parse(event.data)
   }
 
