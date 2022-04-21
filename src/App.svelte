@@ -40,6 +40,8 @@
 
   openSocket()
 
+  /**/
+
 </script>
 
 <div id="counter-pad">
