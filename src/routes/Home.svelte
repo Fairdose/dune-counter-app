@@ -17,7 +17,7 @@
     <form class="input-section">
         <label>
             <span>Enter your comm channel</span>
-            <input bind:value={room.value} type="tel" name="room">
+            <input bind:value={room.value} name="room">
         </label>
         <button type="submit" on:click={joinRoom}>Enter</button>
     </form>
@@ -50,6 +50,7 @@
         text-align: center;
         justify-content: center;
         align-items: center;
+        font-weight: bold;
         span {
           margin-bottom: 1em;
         }
@@ -62,17 +63,18 @@
           text-align: center;
           color: aliceblue;
           font-family: $def-font;
+          outline: none;
         }
       }
 
       button {
         font-family: $def-font;
-        padding: 0.3em 0.5em;
+        padding: 0.5em 1.8em;
         font-weight: bolder;
         color: white;
         background: $dune-bck;
-        border: 3px solid #bf6116;
-        border-radius: 15px;
+        border: none;
+        border-radius: 10px;
         font-size: 1em;
         margin-top: 1em;
         margin-bottom: 1em;

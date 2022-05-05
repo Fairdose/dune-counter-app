@@ -1,5 +1,5 @@
 <script>
-    import { useParams, navigate } from "svelte-navigator"
+    import {useParams, navigate} from "svelte-navigator"
 
     const params = useParams()
 
@@ -33,6 +33,12 @@
 
 <div id="counter-pad">
     <div class="tools">Room: {$params.room}</div>
+    <div class="refresh" on:click={() => document.location.href = document.location.href}>
+        <i class="fa fa-refresh"></i>
+    </div>
+    <div class="exit-room" on:click={() => navigate('/', {replace: true})}>
+        <i class="fa fa-home"></i>
+    </div>
     <div class="cp-momentum-counter">
         <span>Momentum</span>
         <span class="points-cta">
@@ -67,6 +73,7 @@
 <!--suppress CssUnknownTarget -->
 <style lang="scss">
   @import "src/assets/_variables";
+
   @font-face {
     font-family: dune_font;
     src: url("/static/fonts/Dune_Rise.ttf");
@@ -83,6 +90,38 @@
     font-weight: bolder;
     color: #e8e8e8;
     margin: 35px 0 0;
+
+    .refresh,
+    .exit-room {
+      color: whitesmoke;
+      position: absolute;
+      background: grey;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      cursor: pointer;
+      transition: transform 300ms linear;
+      border: 2px solid #464646;
+      font-size: 0.7em;
+
+      &:is(.refresh) {
+        right: 5px;
+        top: 5px;
+
+        &:hover {
+          transform: rotate(45deg);
+        }
+      }
+
+      &:is(.exit-room) {
+        right: 35px;
+        top: 5px;
+      }
+    }
 
     .tools {
       font-size: 0.6em;
@@ -121,9 +160,11 @@
         & > em {
           font-size: 0.65em;
         }
+
         &.points-cta {
           margin-left: auto;
           display: flex;
+
           button {
             color: black;
             width: 1.7em;
