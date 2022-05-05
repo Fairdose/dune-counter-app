@@ -25,3 +25,6 @@ Paste this code in your console when you are in the game or use it with scriptin
   targetElement.appendChild(fragment);
 })()
 ```
+
+
+Or you can use on browser with this [link](https://dune-counter-app.fairdose.net)
