@@ -1,16 +1,16 @@
 <script>
     import {navigate} from "svelte-navigator";
 
-    let room = ''
+    let room = 0
 </script>
 
 <main id="waiting-room">
     <div class="input-section">
         <label>
             <p>Please enter your room number</p>
-            <input bind:value={room} type="tel" maxlength="6">
+            <input bind:value={room} name="room" type="tel">
         </label>
-        <button on:click={navigate(`/room/${room}`, {replace: true})}>Enter</button>
+        <button on:click={navigate(`/room/${room}`)}>Enter</button>
     </div>
 </main>
 
