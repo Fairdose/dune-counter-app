@@ -78,10 +78,10 @@
     width: 100%;
     height: auto;
     pointer-events: auto;
-    margin: 0;
     font-size: 1.3em;
     font-weight: bolder;
     color: #e8e8e8;
+    margin: 30px 0 0;
 
     [class*="-counter"] {
       display: flex;
