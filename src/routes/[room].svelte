@@ -1,7 +1,6 @@
 <script>
     import {useParams, navigate} from "svelte-navigator"
 
-    const isAdmin = false
     const params = useParams()
 
     !$params.room && navigate('/')
@@ -12,14 +11,13 @@
         extendedTask: []
     }
 
-    let ws = new WebSocket(`${import.meta.env.VITE_SOCKET_URL}?u=a&uType=admin&room=${$params.room}`)
+    let ws = new WebSocket(`${import.meta.env.VITE_SOCKET_URL}?u=a&user=admin&room=${$params.room}`)
 
     ws.onmessage = (event) => {
         points = JSON.parse(event.data)
     }
 
     ws.onerror = (event) => {
-        ws = new WebSocket(`${import.meta.env.VITE_SOCKET_URL}?u=a&uType=admin&room=${$params.room}`)
         console.log(event)
     }
 
@@ -30,46 +28,51 @@
     const sendPoints = async () => {
         await ws.send(JSON.stringify(points))
     }
-
-    /*
-    let pingWs = setInterval(() => {
-        ws.send([0x9])
-    },10000)
-*/
-
 </script>
 
 <div id="counter-pad">
     <div class="tools"></div>
-    <label class="cp-momentum-counter">
+    <div class="cp-momentum-counter">
         <span>Momentum</span>
-        <input class="sparky" bind:value={points.momentum} on:blur={sendPoints} name="momentum" type="tel">
-    </label>
-    <label class="cp-threat-counter">
+        <span class="points-cta">
+            <button on:click={() => { sendPoints(points.momentum++) }}>+</button>
+            <button on:click={() => { sendPoints(points.momentum--) }}>-</button>
+        </span>
+        <input class="sparky" bind:value={points.momentum} name="momentum" type="tel">
+    </div>
+    <div class="cp-threat-counter">
         <span>Threat</span>
-        <input bind:value={points.threat} on:blur={sendPoints} name="threat" type="tel">
-    </label>
+        <span class="points-cta">
+            <button on:click={() => { sendPoints(points.threat++) }}>+</button>
+            <button on:click={() => { sendPoints(points.threat--) }}>-</button>
+        </span>
+        <input bind:value={points.threat} name="threat" type="tel">
+    </div>
     {#each points.extendedTask as eTask}
-        <label class="cp-extended-counter">
-    <span>Extended Task <br>
-      <em>({eTask.name})</em>
-    </span>
-            <input bind:value={eTask.value} disabled={!isAdmin} name="extended-task" on:blur={sendPoints}
-                   type="tel">
-        </label>
+        <div class="cp-extended-counter">
+            <span>
+                Extended Task <br>
+                <em>({eTask.name})</em>
+            </span>
+            <span class="points-cta">
+                <button on:click={() => { sendPoints(eTask.value++) }}>+</button>
+                <button on:click={() => { sendPoints(eTask.value--) }}>-</button>
+            </span>
+            <input bind:value={eTask.value} name="extended-task" type="tel">
+        </div>
     {/each}
 </div>
 
 <!--suppress CssUnknownTarget -->
 <style lang="scss">
-  @use "src/assets/_variables";
+  @import "src/assets/_variables";
   @font-face {
     font-family: dune_font;
     src: url("/static/fonts/Dune_Rise.ttf");
   }
 
   #counter-pad {
-    font-family: dune_font, sans-serif, Tahoma;
+    font-family: $def-font;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -80,7 +83,7 @@
     font-weight: bolder;
     color: #e8e8e8;
 
-    & > [class*="-counter"] {
+    [class*="-counter"] {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -88,17 +91,37 @@
       border: 2px solid #464646;
       border-radius: 5px;
       padding: 0.2em 0.5em;
-      background: linear-gradient(100deg, rgb(0, 0, 0), rgba(255, 108, 0, 0.8), rgba(255, 108, 0, 0.4), rgba(0, 0, 0, 0.1));
+      background: $dune-bck;
+
+      &[class*="extended"] {
+        & > span {
+          font-size: 0.6em;
+        }
+      }
 
       &:last-of-type {
         margin-bottom: 0;
       }
 
       & > span {
-        margin-right: 1em;
+        margin-right: 15px;
 
         & > em {
           font-size: 0.65em;
+        }
+        &.points-cta {
+          margin-left: auto;
+          display: flex;
+          button {
+            color: black;
+            width: 1.7em;
+            height: 1.7em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 3px;
+            cursor: pointer;
+          }
         }
       }
 
