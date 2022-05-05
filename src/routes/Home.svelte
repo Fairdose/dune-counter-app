@@ -1,17 +1,26 @@
 <script>
-    import {navigate} from "svelte-navigator";
+    import {navigate} from "svelte-navigator"
 
-    let room = 0
+    let room = {
+        value: null,
+        valid: false
+    }
+
+    const joinRoom = (event) => {
+        event.preventDefault()
+        room.valid = !!room.value && !!room.value.match('^[0-9]*$')
+        room.valid && navigate(`/room/${parseInt(room.value)}`)
+    }
 </script>
 
 <main id="waiting-room">
-    <div class="input-section">
+    <form class="input-section">
         <label>
-            <p>Please enter your room number</p>
-            <input bind:value={room} name="room" type="tel">
+            <span>Enter your comm channel</span>
+            <input bind:value={room.value} type="tel" name="room">
         </label>
-        <button on:click={navigate(`/room/${room}`)}>Enter</button>
-    </div>
+        <button type="submit" on:click={joinRoom}>Enter</button>
+    </form>
 </main>
 
 <style lang="scss">
@@ -41,6 +50,9 @@
         text-align: center;
         justify-content: center;
         align-items: center;
+        span {
+          margin-bottom: 1em;
+        }
 
         input {
           background: black;

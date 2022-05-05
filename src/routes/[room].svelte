@@ -3,6 +3,7 @@
 
     const params = useParams()
 
+    !$params.room.match('^[0-9]*$') && navigate('/')
     !$params.room && navigate('/')
 
     let points = {
