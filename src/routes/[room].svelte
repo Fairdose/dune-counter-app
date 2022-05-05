@@ -1,5 +1,5 @@
 <script>
-    import {useParams, navigate} from "svelte-navigator"
+    import { useParams, navigate } from "svelte-navigator"
 
     const params = useParams()
 
@@ -32,14 +32,14 @@
 </script>
 
 <div id="counter-pad">
-    <div class="tools"></div>
+    <div class="tools">Room: {$params.room}</div>
     <div class="cp-momentum-counter">
         <span>Momentum</span>
         <span class="points-cta">
             <button on:click={() => { sendPoints(points.momentum++) }}>+</button>
             <button on:click={() => { sendPoints(points.momentum--) }}>-</button>
         </span>
-        <input class="sparky" bind:value={points.momentum} name="momentum" type="tel">
+        <input class="sparky" bind:value={points.momentum} name="momentum" type="tel" disabled>
     </div>
     <div class="cp-threat-counter">
         <span>Threat</span>
@@ -47,7 +47,7 @@
             <button on:click={() => { sendPoints(points.threat++) }}>+</button>
             <button on:click={() => { sendPoints(points.threat--) }}>-</button>
         </span>
-        <input bind:value={points.threat} name="threat" type="tel">
+        <input bind:value={points.threat} name="threat" type="tel" disabled>
     </div>
     {#each points.extendedTask as eTask}
         <div class="cp-extended-counter">
@@ -59,7 +59,7 @@
                 <button on:click={() => { sendPoints(eTask.value++) }}>+</button>
                 <button on:click={() => { sendPoints(eTask.value--) }}>-</button>
             </span>
-            <input bind:value={eTask.value} name="extended-task" type="tel">
+            <input bind:value={eTask.value} name="extended-task" type="tel" disabled>
         </div>
     {/each}
 </div>
@@ -83,6 +83,17 @@
     font-weight: bolder;
     color: #e8e8e8;
     margin: 35px 0 0;
+
+    .tools {
+      font-size: 0.6em;
+      position: fixed;
+      top: 6px;
+      left: 0;
+      padding: 3px 30px 3px 10px;
+      border: 2px solid #464646;
+      border-radius: 15px 0 30px 0;
+      background: $dune-bck;
+    }
 
     [class*="-counter"] {
       display: flex;

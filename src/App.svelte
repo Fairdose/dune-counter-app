@@ -1,5 +1,5 @@
 <script>
-    import { Router, Route, Link } from 'svelte-navigator'
+    import {Router, Route, navigate} from 'svelte-navigator'
     import Home from "./routes/Home.svelte"
     import Counter from './routes/[room].svelte'
 
@@ -14,10 +14,8 @@
         <div class="refresh" on:click={() => document.location.href = document.location.href}>
             <i class="fa fa-refresh"></i>
         </div>
-        <div class="exit-room">
-            <Link to="/">
-                <i class="fa fa-arrow-up"></i>
-            </Link>
+        <div class="exit-room" on:click={() => navigate('/', {replace: true})}>
+            <i class="fa fa-home"></i>
         </div>
         <Route path="room/:room" component={Counter} />
         <Route path="/" component={Home} />
