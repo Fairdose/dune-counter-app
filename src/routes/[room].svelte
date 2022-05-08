@@ -1,18 +1,20 @@
 <script>
     import {useParams, navigate} from "svelte-navigator"
+    import ExtendedTask from "../objects/extendedTask.js";
 
     const params = useParams()
 
     !$params.room.match('^[0-9]*$') && navigate('/')
     !$params.room && navigate('/')
 
+    let ws = new WebSocket(`${import.meta.env.VITE_SOCKET_URL}?u=a&user=admin&room=${$params.room}`)
+
+    let addTaskContainer = false
     let points = {
         momentum: 0,
         threat: 0,
         extendedTask: []
     }
-
-    let ws = new WebSocket(`${import.meta.env.VITE_SOCKET_URL}?u=a&user=admin&room=${$params.room}`)
 
     ws.onmessage = (event) => {
         points = JSON.parse(event.data)
@@ -29,15 +31,40 @@
     const sendPoints = async () => {
         await ws.send(JSON.stringify(points))
     }
+
+    const addExtendedTask = (e) => {
+    }
 </script>
 
 <div id="counter-pad">
-    <div class="tools">Room: {$params.room}</div>
-    <div class="refresh" on:click={() => document.location.href = document.location.href}>
-        <i class="fa fa-refresh"></i>
-    </div>
-    <div class="exit-room" on:click={() => navigate('/', {replace: true})}>
-        <i class="fa fa-home"></i>
+    <head>
+        <title>Dune Counter app</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <div class="tools">
+        <div class="room-id">Room: {$params.room}</div>
+        <div class="tool add-task">
+            <i class="fa fa-plus" on:click={() => addTaskContainer = !addTaskContainer}></i>
+            {#if addTaskContainer}
+            <div class="add-task-input" >
+                <div>
+                    <label for="task-name">
+                    </label>
+                    <input id="task-name" type="text" name="task-name">
+                    <label for="task-value">
+                    </label>
+                    <input id="task-value" type="number" name="task-value">
+                    <button type="submit" on:click={addExtendedTask}>Add</button>
+                </div>
+            </div>
+            {/if}
+        </div>
+        <div class="tool refresh" on:click={() => document.location.href = document.location.href}>
+            <i class="fa fa-refresh"></i>
+        </div>
+        <div class="tool exit-room" on:click={() => navigate('/', {replace: true})}>
+            <i class="fa fa-home"></i>
+        </div>
     </div>
     <div class="cp-momentum-counter">
         <span>Momentum</span>
@@ -89,49 +116,64 @@
     font-size: 1.3em;
     font-weight: bolder;
     color: #e8e8e8;
-    margin: 35px 0 0;
-
-    .refresh,
-    .exit-room {
-      color: whitesmoke;
-      position: absolute;
-      background: grey;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      cursor: pointer;
-      transition: transform 300ms linear;
-      border: 2px solid #464646;
-      font-size: 0.7em;
-
-      &:is(.refresh) {
-        right: 5px;
-        top: 5px;
-
-        &:hover {
-          transform: rotate(45deg);
-        }
-      }
-
-      &:is(.exit-room) {
-        right: 35px;
-        top: 5px;
-      }
-    }
 
     .tools {
-      font-size: 0.6em;
-      position: fixed;
-      top: 6px;
-      left: 0;
-      padding: 3px 30px 3px 10px;
-      border: 2px solid #464646;
-      border-radius: 15px 0 30px 0;
-      background: $dune-bck;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+
+      .room-id {
+        font-size: 0.6em;
+        padding: 3px 30px 3px 10px;
+        border: 2px solid #464646;
+        border-radius: 15px 0 30px 0;
+        background: $dune-bck;
+        margin-right: auto;
+      }
+
+      & > .tool {
+        color: whitesmoke;
+        background: grey;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        cursor: pointer;
+        transition: transform 300ms linear;
+        border: 2px solid #464646;
+        font-size: 0.7em;
+        margin-left: 5px;
+
+        &:is(.refresh) {
+          &:hover {
+            transform: rotate(45deg);
+          }
+        }
+        &:is(.add-task) {
+          .add-task-input {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+            cursor: auto;
+            & > form {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+            }
+          }
+        }
+      }
     }
 
     [class*="-counter"] {

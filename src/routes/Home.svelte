@@ -14,6 +14,10 @@
 </script>
 
 <main id="waiting-room">
+    <head>
+        <title>Join channel</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
     <form class="input-section">
         <label>
             <span>Enter your comm channel</span>
